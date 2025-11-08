@@ -1,4 +1,6 @@
-﻿namespace Petshop.Models
+﻿
+
+namespace Petshop.Models
 {
     public class Animal
     {

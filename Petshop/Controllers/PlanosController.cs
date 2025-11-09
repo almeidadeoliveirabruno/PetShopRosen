@@ -159,16 +159,22 @@ namespace Petshop.Controllers
             var clientes = await _context.Clientes
                 .Include(c => c.Animais)
                     .ThenInclude(a => a.PlanoAnimal)
+                .Where(c => c.Animais.Any(a => a.Especie == "Cachorro"))
                 .Select(c => new
                 {
                     Cliente = c,
-                    TotalGasto = c.Animais.Sum(a => a.PlanoAnimal != null ? a.PlanoAnimal.Preco : 0)
+                    // Soma apenas os planos dos cachorros
+                    TotalGastoCachorros = c.Animais
+                        .Where(a => a.Especie == "Cachorro")
+                        .Sum(a => a.PlanoAnimal.Preco)
                 })
-                .Where(c => c.TotalGasto >= meta)
-                .OrderByDescending(c => c.TotalGasto)
+                // HAVING: clientes cujo gasto com cachorros >= meta
+                .Where(c => c.TotalGastoCachorros >= meta)
+                .OrderByDescending(c => c.TotalGastoCachorros)
                 .ToListAsync();
 
             return View(clientes);
         }
+
     }
 }

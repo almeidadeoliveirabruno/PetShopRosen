@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Petshop.Data;
 
@@ -11,9 +12,11 @@ using Petshop.Data;
 namespace Petshop.Migrations
 {
     [DbContext(typeof(PetshopContext))]
-    partial class PetshopContextModelSnapshot : ModelSnapshot
+    [Migration("20251109001441_bdatualizado")]
+    partial class bdatualizado
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

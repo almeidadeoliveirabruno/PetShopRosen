@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -56,7 +55,7 @@ namespace Petshop.Controllers
         // POST: Animais/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Especie,Raca,Idade,ClienteId,PlanoId")] Animal animal)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Especie,Raca,DataNascimento,ClienteId,PlanoId")] Animal animal)
         {
             var especiesPermitidas = new[] { "Cachorro", "Gato" };
 
@@ -72,7 +71,6 @@ namespace Petshop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Recarregar os selects com nomes caso a validação falhe
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", animal.ClienteId);
             ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Nome", animal.PlanoId);
             return View(animal);
@@ -96,10 +94,16 @@ namespace Petshop.Controllers
         // POST: Animais/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Especie,Raca,Idade,ClienteId,PlanoId")] Animal animal)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Especie,Raca,DataNascimento,ClienteId,PlanoId")] Animal animal)
         {
             if (id != animal.Id)
                 return NotFound();
+
+            var especiesPermitidas = new[] { "Cachorro", "Gato" };
+            if (!especiesPermitidas.Contains(animal.Especie))
+            {
+                ModelState.AddModelError("Especie", "Espécie inválida. Escolha apenas Cachorro ou Gato.");
+            }
 
             if (ModelState.IsValid)
             {
@@ -118,7 +122,6 @@ namespace Petshop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Recarregar selects caso haja erro
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", animal.ClienteId);
             ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Nome", animal.PlanoId);
             return View(animal);
@@ -152,7 +155,6 @@ namespace Petshop.Controllers
                 _context.Animais.Remove(animal);
                 await _context.SaveChangesAsync();
             }
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -161,12 +163,18 @@ namespace Petshop.Controllers
             return _context.Animais.Any(e => e.Id == id);
         }
 
+        // GET: Animais/FaixaEtaria
         public async Task<IActionResult> FaixaEtaria()
         {
             var resultado = await _context.Animais
+                .Select(a => new
+                {
+                    a.Especie,
+                    Idade = EF.Functions.DateDiffYear(a.DataNascimento, DateTime.Today)
+                })
                 .GroupBy(a => new
                 {
-                    Especie = a.Especie,
+                    a.Especie,
                     FaixaEtaria = a.Idade <= 2 ? "Filhote" :
                                   a.Idade <= 7 ? "Adulto" : "Idoso"
                 })
@@ -178,15 +186,10 @@ namespace Petshop.Controllers
                 })
                 .OrderBy(g => g.Especie)
                 .ThenBy(g => g.FaixaEtaria == "Idoso" ? 1 :
-                 g.FaixaEtaria == "Adulto" ? 2 : 3)
+                             g.FaixaEtaria == "Adulto" ? 2 : 3)
                 .ToListAsync();
 
             return View(resultado);
         }
-
-
-
     }
-
-
 }

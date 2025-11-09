@@ -22,52 +22,49 @@
         text-align: center;
     }
 
-    /* ======== FORMULÁRIO ======== */
     .form-group {
         display: flex;
         flex-direction: column;
         margin-bottom: 18px;
     }
 
-        .form-group label {
-            font-weight: 500;
-            margin-bottom: 6px; /* espaço entre label e input */
-        }
+    .form-group label {
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
 
     .form-control {
         border-radius: 8px;
         border: 1px solid #ced4da;
         padding: 10px 12px;
-        width: 100%; /* todos os inputs com mesma largura */
+        width: 100%;
         box-sizing: border-box;
         transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-        .form-control:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
-        }
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
+    }
 
     .text-danger {
         font-size: 0.85rem;
         margin-top: 3px;
     }
 
-    /* ======== BOTÕES ======== */
     .btn-primary {
         background-color: #0d6efd;
         border: none;
         border-radius: 8px;
         padding: 10px 20px;
         font-weight: 600;
-        color: #fff; /* texto branco */
+        color: #fff;
         transition: background-color 0.2s;
     }
 
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-            color: #fff;
-        }
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+    }
 
     .btn-secondary {
         background-color: #6c757d;
@@ -80,12 +77,10 @@
         text-decoration: none;
     }
 
-        .btn-secondary:hover {
-            background-color: #5c636a;
-            color: #fff;
-        }
+    .btn-secondary:hover {
+        background-color: #5c636a;
+    }
 
-    /* ======== AÇÕES ======== */
     .form-actions {
         display: flex;
         justify-content: center;
@@ -106,8 +101,12 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="Especie"></label>
-            <input asp-for="Especie" class="form-control" />
+            <label asp-for="Especie">Espécie</label>
+            <select asp-for="Especie" class="form-control">
+                <option value="">-- Selecione --</option>
+                <option value="Cachorro">Cachorro</option>
+                <option value="Gato">Gato</option>
+            </select>
             <span asp-validation-for="Especie" class="text-danger"></span>
         </div>
 
@@ -118,9 +117,10 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="Idade"></label>
-            <input asp-for="Idade" class="form-control" />
-            <span asp-validation-for="Idade" class="text-danger"></span>
+            <label asp-for="DataNascimento">Data de Nascimento</label>
+            <input asp-for="DataNascimento" class="form-control" type="date"
+                   max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="DataNascimento" class="text-danger"></span>
         </div>
 
         <div class="form-group">
@@ -143,7 +143,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

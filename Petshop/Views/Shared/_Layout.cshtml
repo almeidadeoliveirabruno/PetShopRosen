@@ -79,16 +79,13 @@
             }
 
         @@keyframes bounce {
-            0%, 100%
+            0%, 100% {
+                transform: translateY(0);
+            }
 
-        {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-5px);
-        }
-
+            50% {
+                transform: translateY(-5px);
+            }
         }
 
         .nav-toggle {
@@ -350,18 +347,15 @@
         }
 
         @@keyframes fadeIn {
-            from
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-        {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         main {
@@ -385,9 +379,9 @@
         </div>
     </header>
 
-        <main role="main">
-            @RenderBody()
-        </main>
+    <main role="main">
+        @RenderBody()
+    </main>
 
     <footer>
         <div class="footer-container">
@@ -415,7 +409,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2025 Petshop - Todos os direitos reservados 
+            &copy; 2025 Petshop - Todos os direitos reservados
         </div>
     </footer>
 

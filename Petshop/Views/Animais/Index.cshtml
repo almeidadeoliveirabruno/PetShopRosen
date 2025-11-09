@@ -9,32 +9,46 @@
     .table-modern {
         border-collapse: collapse;
         width: 100%;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        border-radius: 10px;
+        border-radius: 12px;
         overflow: hidden;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
         background-color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
         .table-modern th, .table-modern td {
-            border: 1px solid #dee2e6;
             padding: 14px 18px;
             text-align: center;
             vertical-align: middle;
+            transition: background-color 0.3s, color 0.3s;
         }
 
+        /* Cabeçalho com cor rosa do layout */
         .table-modern th {
-            background-color: #f8f9fa;
+            background-color: #ff6b9d; /* rosa do layout */
+            color: #fff;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.9rem;
         }
 
-        .table-modern tr:hover {
-            background-color: #f3f6ff;
-            transition: background-color 0.2s;
+        /* Linhas alternadas */
+        .table-modern tbody tr:nth-child(even) {
+            background-color: #f5f7fa;
         }
 
-    /* ======== BOTÕES ======== */
+        .table-modern tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        /* Hover */
+        .table-modern tbody tr:hover {
+            background-color: #d1e7ff; /* leve azul claro */
+            color: #000;
+            font-weight: 500;
+        }
+
+    /* Botões antigos mantidos */
     .btn-main {
         border-radius: 8px;
         padding: 10px 20px;
@@ -48,7 +62,7 @@
     .btn-new {
         background-color: #28a745;
     }
-
+        /* verde */
         .btn-new:hover {
             background-color: #218838;
         }
@@ -56,7 +70,7 @@
     .btn-info {
         background-color: #0dcaf0;
     }
-
+        /* azul claro */
         .btn-info:hover {
             background-color: #0bb5d8;
         }
@@ -98,28 +112,35 @@
             background-color: #c82333;
         }
 
-    /* ======== CONTAINER ======== */
+    /* Container e card */
     .card-custom {
         border: none;
         border-radius: 12px;
-        background-color: #fdfdfd;
+        background-color: #fff;
         padding: 20px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        transition: box-shadow 0.3s ease;
     }
 
-    h2 {
-        font-weight: 700;
-    }
+        .card-custom:hover {
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
 
     .top-actions {
         display: flex;
         gap: 10px;
         margin-bottom: 20px;
     }
+
+    h2 {
+        font-weight: 700;
+        color: #0d6efd;
+    }
 </style>
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-primary mb-0">@ViewData["Title"]</h2>
+        <h2>@ViewData["Title"]</h2>
         <div class="top-actions">
             <a asp-action="Create" class="btn-main btn-new">+ Novo Animal</a>
             <a asp-action="FaixaEtaria" class="btn-main btn-info">📊 Ver Faixas Etárias</a>

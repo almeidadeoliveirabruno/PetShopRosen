@@ -1,54 +1,121 @@
 ﻿@model Petshop.Models.Animal
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes do Animal";
 }
 
-<h1>Details</h1>
+<style>
+    /* ======== ESTILO DO CARD ======== */
+    .card-custom {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 12px;
+        background-color: #ffffff;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
 
-<div>
-    <h4>Animal</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Especie)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Especie)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Raca)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Raca)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Idade)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Idade)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Dono)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Dono.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PlanoAnimal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PlanoAnimal.Id)
-        </dd>
+    h2 {
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #0d6efd;
+        text-align: center;
+    }
+
+    /* ======== DETALHES ======== */
+    .details-row {
+        display: flex;
+        margin-bottom: 12px;
+    }
+
+        .details-row dt {
+            font-weight: 600;
+            width: 150px; /* largura fixa para alinhamento */
+            flex-shrink: 0;
+            color: #495057;
+        }
+
+        .details-row dd {
+            margin: 0;
+            flex-grow: 1;
+            color: #212529;
+        }
+
+    /* ======== BOTÕES ======== */
+    .btn-primary, .btn-secondary {
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        margin-right: 10px;
+        transition: background-color 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        color: #fff;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            color: #fff;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+        border: none;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5c636a;
+            color: #fff;
+        }
+
+    .actions {
+        text-align: center;
+        margin-top: 25px;
+    }
+</style>
+
+<div class="card-custom">
+    <h2>Detalhes do Animal</h2>
+
+    <dl class="details">
+        <div class="details-row">
+            <dt>@Html.DisplayNameFor(model => model.Id)</dt>
+            <dd>@Html.DisplayFor(model => model.Id)</dd>
+        </div>
+        <div class="details-row">
+            <dt>@Html.DisplayNameFor(model => model.Nome)</dt>
+            <dd>@Html.DisplayFor(model => model.Nome)</dd>
+        </div>
+        <div class="details-row">
+            <dt>@Html.DisplayNameFor(model => model.Especie)</dt>
+            <dd>@Html.DisplayFor(model => model.Especie)</dd>
+        </div>
+        <div class="details-row">
+            <dt>@Html.DisplayNameFor(model => model.Raca)</dt>
+            <dd>@Html.DisplayFor(model => model.Raca)</dd>
+        </div>
+        <div class="details-row">
+            <dt>@Html.DisplayNameFor(model => model.Idade)</dt>
+            <dd>@Html.DisplayFor(model => model.Idade)</dd>
+        </div>
+        <div class="details-row">
+            <dt>@Html.DisplayNameFor(model => model.Dono)</dt>
+            <dd>@Html.DisplayFor(model => model.Dono.Nome)</dd>
+        </div>
+        <div class="details-row">
+            <dt>@Html.DisplayNameFor(model => model.PlanoAnimal)</dt>
+            <dd>@Html.DisplayFor(model => model.PlanoAnimal.Nome)</dd>
+        </div>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+    <div class="actions">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+    </div>
 </div>

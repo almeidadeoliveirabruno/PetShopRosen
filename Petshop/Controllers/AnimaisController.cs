@@ -22,7 +22,9 @@ namespace Petshop.Controllers
         // GET: Animais
         public async Task<IActionResult> Index()
         {
-            var petshopContext = _context.Animais.Include(a => a.Dono).Include(a => a.PlanoAnimal);
+            var petshopContext = _context.Animais
+                .Include(a => a.Dono)
+                .Include(a => a.PlanoAnimal);
             return View(await petshopContext.ToListAsync());
         }
 
@@ -30,18 +32,15 @@ namespace Petshop.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var animal = await _context.Animais
                 .Include(a => a.Dono)
                 .Include(a => a.PlanoAnimal)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (animal == null)
-            {
                 return NotFound();
-            }
 
             return View(animal);
         }
@@ -49,26 +48,33 @@ namespace Petshop.Controllers
         // GET: Animais/Create
         public IActionResult Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id");
-            ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Id");
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome");
+            ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Nome");
             return View();
         }
 
         // POST: Animais/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,Especie,Raca,Idade,ClienteId,PlanoId")] Animal animal)
         {
+            var especiesPermitidas = new[] { "Cachorro", "Gato" };
+
+            if (!especiesPermitidas.Contains(animal.Especie))
+            {
+                ModelState.AddModelError("Especie", "Espécie inválida. Escolha apenas Cachorro ou Gato.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(animal);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", animal.ClienteId);
-            ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Id", animal.PlanoId);
+
+            // Recarregar os selects com nomes caso a validação falhe
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", animal.ClienteId);
+            ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Nome", animal.PlanoId);
             return View(animal);
         }
 
@@ -76,31 +82,24 @@ namespace Petshop.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var animal = await _context.Animais.FindAsync(id);
             if (animal == null)
-            {
                 return NotFound();
-            }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", animal.ClienteId);
-            ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Id", animal.PlanoId);
+
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", animal.ClienteId);
+            ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Nome", animal.PlanoId);
             return View(animal);
         }
 
         // POST: Animais/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Especie,Raca,Idade,ClienteId,PlanoId")] Animal animal)
         {
             if (id != animal.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -112,18 +111,16 @@ namespace Petshop.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!AnimalExists(animal.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", animal.ClienteId);
-            ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Id", animal.PlanoId);
+
+            // Recarregar selects caso haja erro
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", animal.ClienteId);
+            ViewData["PlanoId"] = new SelectList(_context.Planos, "Id", "Nome", animal.PlanoId);
             return View(animal);
         }
 
@@ -131,18 +128,15 @@ namespace Petshop.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var animal = await _context.Animais
                 .Include(a => a.Dono)
                 .Include(a => a.PlanoAnimal)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (animal == null)
-            {
                 return NotFound();
-            }
 
             return View(animal);
         }
@@ -156,9 +150,9 @@ namespace Petshop.Controllers
             if (animal != null)
             {
                 _context.Animais.Remove(animal);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -166,5 +160,33 @@ namespace Petshop.Controllers
         {
             return _context.Animais.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> FaixaEtaria()
+        {
+            var resultado = await _context.Animais
+                .GroupBy(a => new
+                {
+                    Especie = a.Especie,
+                    FaixaEtaria = a.Idade <= 2 ? "Filhote" :
+                                  a.Idade <= 7 ? "Adulto" : "Idoso"
+                })
+                .Select(g => new
+                {
+                    g.Key.Especie,
+                    g.Key.FaixaEtaria,
+                    Quantidade = g.Count()
+                })
+                .OrderBy(g => g.Especie)
+                .ThenBy(g => g.FaixaEtaria == "Idoso" ? 1 :
+                 g.FaixaEtaria == "Adulto" ? 2 : 3)
+                .ToListAsync();
+
+            return View(resultado);
+        }
+
+
+
     }
+
+
 }

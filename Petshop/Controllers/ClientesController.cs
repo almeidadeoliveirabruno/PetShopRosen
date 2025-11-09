@@ -153,5 +153,22 @@ namespace Petshop.Controllers
         {
             return _context.Clientes.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> Ranking()
+        {
+            var ranking = await _context.Clientes
+                .Include(c => c.Animais)
+                .Select(c => new
+                {
+                    Nome = c.Nome,
+                    QuantidadeAnimais = c.Animais.Count()
+                })
+                .OrderByDescending(c => c.QuantidadeAnimais)
+                .Take(5) 
+                .ToListAsync();
+
+            return View(ranking);
+        }
+
     }
 }

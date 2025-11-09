@@ -21,5 +21,7 @@ namespace Petshop.Data
                 .Property(p => p.Preco)
                 .HasPrecision(10, 2);
         }
+
+
     }
 }

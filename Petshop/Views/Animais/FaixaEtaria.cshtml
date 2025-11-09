@@ -1,0 +1,86 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Distribuição por Faixa Etária e Espécie";
+}
+
+<style>
+    .table-modern {
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+        .table-modern th, .table-modern td {
+            border: 1px solid #dee2e6;
+            padding: 14px 18px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table-modern th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .table-modern tr:hover {
+            background-color: #f3f6ff;
+            transition: background-color 0.2s;
+        }
+
+    .card-custom {
+        border: none;
+        border-radius: 12px;
+        background-color: #fdfdfd;
+        padding: 20px;
+    }
+
+    h2 {
+        font-weight: 700;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0">@ViewData["Title"]</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary fw-semibold">⬅ Voltar</a>
+    </div>
+
+    <div class="card card-custom shadow-sm">
+        <table class="table-modern">
+            <thead>
+                <tr>
+                    <th>Espécie</th>
+                    <th>Faixa Etária</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Especie</td>
+                            <td>@item.FaixaEtaria</td>
+                            <td>@item.Quantidade</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-4">
+                            Nenhum dado encontrado.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

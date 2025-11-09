@@ -1,0 +1,56 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Top 5 Clientes com Mais Animais";
+}
+
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary">@ViewData["Title"]</h2>
+        <p class="text-muted">Ranking dos clientes com o maior número de animais cadastrados</p>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th style="width:70%">🐾 Cliente</th>
+                        <th>🐕 Quantidade de Animais</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        int posicao = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr class="text-center">
+                                <td class="fw-semibold">
+                                    <span class="badge bg-secondary me-2">@posicao°</span>
+                                    @item.Nome
+                                </td>
+                                <td class="fw-bold text-dark">@item.QuantidadeAnimais</td>
+                            </tr>
+                            posicao++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="2" class="text-center text-muted py-4">
+                                Nenhum cliente encontrado 😕
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-outline-primary px-4">
+            ← Voltar para a lista de clientes
+        </a>
+    </div>
+</div>

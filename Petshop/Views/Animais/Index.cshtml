@@ -1,65 +1,175 @@
 ﻿@model IEnumerable<Petshop.Models.Animal>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista de Animais";
 }
 
-<h1>Index</h1>
+<style>
+    /* ======== ESTILO DA TABELA ======== */
+    .table-modern {
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #fff;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Especie)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Raca)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Idade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dono)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PlanoAnimal)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Especie)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Raca)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Idade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dono.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PlanoAnimal.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        .table-modern th, .table-modern td {
+            border: 1px solid #dee2e6;
+            padding: 14px 18px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table-modern th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .table-modern tr:hover {
+            background-color: #f3f6ff;
+            transition: background-color 0.2s;
+        }
+
+    /* ======== BOTÕES ======== */
+    .btn-main {
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.2s;
+    }
+
+    .btn-new {
+        background-color: #28a745;
+    }
+
+        .btn-new:hover {
+            background-color: #218838;
+        }
+
+    .btn-info {
+        background-color: #0dcaf0;
+    }
+
+        .btn-info:hover {
+            background-color: #0bb5d8;
+        }
+
+    .btn-action {
+        min-width: 80px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background-color: #0d6efd;
+        color: #fff;
+    }
+
+        .btn-edit:hover {
+            background-color: #0b5ed7;
+        }
+
+    .btn-details {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+        .btn-details:hover {
+            background-color: #5c636a;
+        }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+    /* ======== CONTAINER ======== */
+    .card-custom {
+        border: none;
+        border-radius: 12px;
+        background-color: #fdfdfd;
+        padding: 20px;
+    }
+
+    h2 {
+        font-weight: 700;
+    }
+
+    .top-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0">@ViewData["Title"]</h2>
+        <div class="top-actions">
+            <a asp-action="Create" class="btn-main btn-new">+ Novo Animal</a>
+            <a asp-action="FaixaEtaria" class="btn-main btn-info">📊 Ver Faixas Etárias</a>
+        </div>
+    </div>
+
+    <div class="card card-custom shadow-sm">
+        <table class="table-modern">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Espécie</th>
+                    <th>Raça</th>
+                    <th>Idade</th>
+                    <th>Dono</th>
+                    <th>Plano</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nome</td>
+                            <td>@item.Especie</td>
+                            <td>@item.Raca</td>
+                            <td>@item.Idade anos</td>
+                            <td>@item.Dono?.Nome</td>
+                            <td>@item.PlanoAnimal?.Nome</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn-action btn-edit">Editar</a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn-action btn-details">Detalhes</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn-action btn-delete">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            Nenhum animal cadastrado.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

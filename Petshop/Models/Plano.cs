@@ -11,6 +11,7 @@ namespace Petshop.Models
         [StringLength(50, MinimumLength = 3, ErrorMessage = "O nome do plano deve ter entre 3 e 50 caracteres.")]
         public string Nome { get; set; }
 
+        [Display(Name = "Preço")]
         [Required(ErrorMessage = "O preço do plano é obrigatório.")]
         [Range(0, 10000, ErrorMessage = "O preço deve ser entre 0 e 10.000.")]
         public decimal Preco { get; set; }

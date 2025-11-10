@@ -163,12 +163,10 @@ namespace Petshop.Controllers
                 .Select(c => new
                 {
                     Cliente = c,
-                    // Soma apenas os planos dos cachorros
                     TotalGastoCachorros = c.Animais
                         .Where(a => a.Especie == "Cachorro")
                         .Sum(a => a.PlanoAnimal.Preco)
                 })
-                // HAVING: clientes cujo gasto com cachorros >= meta
                 .Where(c => c.TotalGastoCachorros >= meta)
                 .OrderByDescending(c => c.TotalGastoCachorros)
                 .ToListAsync();

@@ -38,6 +38,7 @@ namespace Petshop.Models
         public int PlanoId { get; set; }
 
         public Cliente? Dono { get; set; }
+        [Display(Name = "Plano Animal")]
         public Plano? PlanoAnimal { get; set; }
     }
 }
